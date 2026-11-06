@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <RootNamespace>VectorField</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Epsilon" Version="1.2.0" />
+    <PackageReference Include="Epsilon.LinearAlgebra" Version="1.5.0" />
+    <PackageReference Include="Epsilon.Calculus" Version="1.1.0" />
+    <PackageReference Include="Silk.NET.Windowing" Version="2.23.0" />
+    <PackageReference Include="Silk.NET.Input" Version="2.23.0" />
+    <PackageReference Include="Silk.NET.Vulkan" Version="2.23.0" />
+    <PackageReference Include="Silk.NET.Vulkan.Extensions.KHR" Version="2.23.0" />
+    <PackageReference Include="Silk.NET.Vulkan.Extensions.EXT" Version="2.23.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Shader Include="Shaders/*.vert;Shaders/*.frag" />
+    <UpToDateCheckInput Include="@(Shader)" />
+  </ItemGroup>
+
+  <Target Name="CompileShaders" BeforeTargets="BeforeBuild"
+          Inputs="@(Shader)" Outputs="@(Shader->'$(IntermediateOutputPath)shaders/%(Filename)%(Extension).spv')">
+    <MakeDir Directories="$(IntermediateOutputPath)shaders" />
+    <Exec Command="glslc --target-env=vulkan1.0 -O &quot;%(Shader.FullPath)&quot; -o &quot;$(IntermediateOutputPath)shaders/%(Shader.Filename)%(Shader.Extension).spv&quot;" />
+  </Target>
+
+  <Target Name="EmbedShaders" BeforeTargets="BeforeBuild" DependsOnTargets="CompileShaders">
+    <ItemGroup>
+      <_SpirV Include="$(IntermediateOutputPath)shaders/*.spv" />
+      <EmbeddedResource Include="@(_SpirV)" LogicalName="%(_SpirV.Filename)%(_SpirV.Extension)" />
+    </ItemGroup>
+  </Target>
+
+</Project>
