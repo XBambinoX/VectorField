@@ -1,5 +1,9 @@
 # Vector Field
 
+<img width="1920" height="1080" alt="vectorfield-epsilon" src="https://github.com/user-attachments/assets/22aa120b-d004-4308-8983-a986c4762a0d" />
+
+If you like it, a ⭐ on [Epsilon](https://github.com/XBambinoX/Epsilon) helps a lot!
+
 An interactive viewer for plane vector fields **F(x, y, t) = [P, Q]**. Type any formula in the
 window and watch thousands of particles flow along it.
 
